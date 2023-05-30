@@ -10,7 +10,7 @@ import Foundation
 protocol MovieService: AnyObject {
     func fetchMovies(from endPoint: MovieListEndPoint, completion: @escaping (Result<TitleMovie, MovieError>) -> ())
     func fetchMovie(id: Int, completion: @escaping (Result<Title, MovieError>) -> ())
-    func searchingMovies(query: String, completion: @escaping (Result<TitleMovie, MovieError>) -> ())
+    func search (with query: String, completion: @escaping (Result<TitleMovie, MovieError>) -> Void)
 }
 
 enum MovieListEndPoint: String, CaseIterable {

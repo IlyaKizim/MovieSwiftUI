@@ -8,38 +8,41 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var mainViewModel = MainViewModel(movieService: APICaller())
+    @State private var activeTab: Int? = 1
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(mainViewModel.movieData, id: \.id) { data in
-                    Section(header: Text(sectionTitle(for: data))) {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack(spacing: 5) {
-                                ForEach(data.titles, id: \.id) { title in
-                                    CellView(title: title)
-                                }
-                            }
-                        }
-                    }
-                    .listRowInsets(EdgeInsets(top: 1, leading: 0, bottom: 10, trailing: 0))
-                }
+            if activeTab == 1 {
+                MainViewController()
+                    .navigationBarTitle(Constants.movie)
+            } else if activeTab == 2 {
+                SearchController()
+                    .navigationBarTitle(Constants.search)
             }
         }
-    }
-}
-
-private func sectionTitle(for data: MovieData) -> String {
-    switch data {
-    case .popular:
-        return "Popular Movies"
-    case .topRated:
-        return "Top Rated Movies"
-    case .upcoming:
-        return "Upcoming Movies"
-    case .nowPlaying:
-        return "Now Playing Movies"
+        .toolbar {
+            ToolbarItemGroup(placement: .bottomBar) {
+                Spacer()
+                Button(action: {
+                    activeTab = 1
+                }) {
+                    Image(systemName: Constants.itemMovie)
+                }
+                .padding(50)
+                
+                Spacer()
+                
+                Button(action: {
+                    activeTab = 2
+                }) {
+                    Image(systemName: Constants.itemSearch)
+                }
+                .padding(50)
+                
+                Spacer()
+            }
+        }
+        .foregroundColor(Color(.black))
     }
 }
 
@@ -49,4 +52,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-

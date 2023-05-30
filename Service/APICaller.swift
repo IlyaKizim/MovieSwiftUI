@@ -27,37 +27,15 @@ class APICaller: MovieService {
         ], completion: completion)
     }
     
-    func searchingMovies(query: String, completion: @escaping (Result<TitleMovie, MovieError>) -> ()) {
-        guard let url = URL(string: "\(Constants.basicURL)/search/movie") else {
-            completion(.failure(.invalidEndPoint))
+    func search(with query: String, completion: @escaping (Result<TitleMovie, MovieError>) -> Void) {
+        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {return}
+        guard let url = URL(string: "\(Constants.basicURL)/3/search/movie?api_key=\(Constants.APIKey)&query=\(query)") else { completion(.failure(.invalidEndPoint))
             return
         }
-        self.loadUrlAndDecode(url: url, params: [
-            "language": "en-US",
-            "include_adult": "false",
-            "region": "US",
-            "query": query
-        ], completion: completion)
+        self.loadUrlAndDecode(url: url, completion: completion)
     }
     
     private func loadUrlAndDecode<D: Decodable>(url: URL, params: [String: String]? = nil, completion: @escaping(Result<D, MovieError>) -> ()) {
-//        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-//            completion(.failure(.invalidEndPoint))
-//            return
-//        }
-//
-//        var queryItem = [URLQueryItem(name: "api_key", value: Constants.APIKey)]
-//
-//        if let param = params {
-//            queryItem.append(contentsOf: param.map { URLQueryItem(name: $0.key, value: $0.value)})
-//        }
-//
-//        urlComponents.queryItems = queryItem
-//
-//        guard let finalUrl = urlComponents.url else {
-//            completion(.failure(.invalidEndPoint))
-//            return
-//        }
         
         Constants.urlSession.dataTask(with: url) {[weak self] (data, responce, error) in
             guard let self = self else { return }
