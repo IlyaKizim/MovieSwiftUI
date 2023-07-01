@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchBarView: UIViewRepresentable {
+    
     let placeHolder: String
     @Binding var text: String
     var onSearchButtonTapped: (() -> Void)?
