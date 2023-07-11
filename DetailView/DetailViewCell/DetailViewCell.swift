@@ -13,3 +13,4 @@ struct DetailViewCell: View {
     }
 }
 
+
